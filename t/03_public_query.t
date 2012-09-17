@@ -2,6 +2,8 @@ use Test::More tests => 14;
 use lib '../lib';
 use Ouch;
 
+use constant PUBLICEVENT => '317497264976561';
+
 use_ok('Facebook::Graph');
 my $fb = Facebook::Graph->new;
 isa_ok($fb, 'Facebook::Graph');
@@ -31,16 +33,16 @@ is($@->message, 'Could not execute request (https://graph.facebook.com?fields=):
 
 # https://www.facebook.com/events/113515098748988/
 my $f8_event = $fb->query
-  ->find('113515098748988')
-  ->request
-  ->as_hashref;
+    ->find(PUBLICEVENT)
+    ->request
+    ->as_hashref;
 
 like($f8_event->{start_time}, qr/\d\d\d\d-\d\d-\d\dT/, '(Default) Date Format: ISO8601' );
 
 $f8_event = $fb->query
-  ->find('113515098748988')
-  ->date_format('U')
-  ->request
-  ->as_hashref;
+    ->find(PUBLICEVENT)
+    ->date_format('U')
+    ->request
+    ->as_hashref;
 
 like($f8_event->{start_time}, qr/\d\d\d\d\d\d\d\d\d\d/, 'Date Format: epoch' );
